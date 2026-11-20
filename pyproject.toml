@@ -1,0 +1,47 @@
+[project]
+name = "graphify-hub"
+version = "0.1.0"
+description = "A shared MCP server that indexes many Git repositories with Graphify and answers code-graph queries for each of them."
+authors = [{ name = "Geovanny Fajardo" }]
+license = "Apache-2.0"
+requires-python = ">=3.11.5,<3.15"
+dependencies = [
+    "mcp-service-kit",
+    "graphifyy[mcp]",
+    "pydantic-settings>=2.4",
+]
+
+[project.scripts]
+graphify-hub = "graphify_hub.server:main"
+
+[dependency-groups]
+dev = ["pytest>=8", "pytest-asyncio>=0.24", "ruff>=0.8", "mypy>=1.13"]
+
+[tool.uv.sources]
+mcp-service-kit = { git = "https://github.com/geosp/mcp-service-kit", tag = "v0.2.1" }
+graphifyy = { git = "https://github.com/geosp/graphify", rev = "51288a92a2866e89fb19a9d26c31214f8925e00f" }
+
+[build-system]
+requires = ["uv_build>=0.13.5,<0.14.0"]
+build-backend = "uv_build"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "S"]
+ignore = ["S603", "S607"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S101", "S105", "S106"]
+
+[tool.mypy]
+python_version = "3.11"
+files = ["src"]
+ignore_missing_imports = true

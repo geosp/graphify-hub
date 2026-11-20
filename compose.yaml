@@ -1,0 +1,25 @@
+# Runs graphify-hub on any Docker host. Configure through .env (see .env.example).
+services:
+  graphify-hub:
+    build: .
+    image: graphify-hub:local
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      HUB_DATA_DIR: /data
+      MCP_TRANSPORT: http
+      MCP_HOST: 0.0.0.0
+      MCP_PORT: "3000"
+    ports:
+      - "${HUB_BIND:-0.0.0.0}:${HUB_PORT:-3000}:3000"
+    volumes:
+      - graphify-hub-data:/data
+    read_only: true
+    tmpfs:
+      - /tmp
+    security_opt:
+      - no-new-privileges:true
+    cap_drop: [ALL]
+
+volumes:
+  graphify-hub-data:
